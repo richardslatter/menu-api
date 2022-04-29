@@ -37,6 +37,24 @@ app.use("/api/menu/items", itemsRouter);
 app.use(errorHandler);
 app.use(notFoundHandler);
 
+/**
+ * mySQL Setup
+ */
+
+const mysql = require('mysql');
+const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'password', // I know its bad
+    database: 'menu'
+});
+connection.connect((err: any) => {
+    if (err) {
+        throw err;
+    }
+    console.log('Connected to mySQL Database');
+});
+
 
 /**
  * Server Activation
