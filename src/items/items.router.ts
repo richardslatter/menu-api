@@ -84,6 +84,7 @@ itemsRouter.put("/:id", async (req: Request, res:Response) => {
     } catch ({message}) {
         res.status(500).send(message);
     }
+    return void 0;
 })
 
 // DELETE items/:id

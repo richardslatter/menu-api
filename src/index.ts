@@ -7,8 +7,10 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import {itemsRouter} from "./items/items.router";
-import { errorHandler } from "./middleware/error.middleware";
-import { notFoundHandler } from "./middleware/not-found.middleware";
+import {errorHandler} from "./middleware/error.middleware";
+import {notFoundHandler} from "./middleware/not-found.middleware";
+import {newfind, newfindAll, test} from "./items/items.sql.service";
+import mysql from 'mysql2/promise';
 
 dotenv.config();
 
@@ -17,7 +19,7 @@ dotenv.config();
  * App Variables
  */
 
-if(!process.env.PORT){
+if (!process.env.PORT) {
     process.exit(1);
 }
 
@@ -41,26 +43,40 @@ app.use(notFoundHandler);
  * mySQL Setup
  */
 
-const mysql = require('mysql');
-const connection = mysql.createConnection({
+export const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
     password: 'password', // I know its bad
     database: 'menu'
 });
-connection.connect((err: any) => {
-    if (err) {
-        throw err;
-    }
-    console.log('Connected to mySQL Database');
-});
+//const newItem = NewFind(1);
+
+
+const query1 = newfindAll();
+const query = newfind();
+
+console.log(query);
+
+//newItem.then(data => console.log(data));
+//newItems.then(data => console.log(data));
+console.log('test');
+//console.log(newItems);
+//console.log(newItem);
 
 
 /**
  * Server Activation
  */
 
-app.listen(PORT, () => {
-    console.log('Listening on port ${PORT}');
-});
+connection
+    .then(() =>
+        app.listen(PORT, () => {
+            const tempString = "test"
+            console.log('Listening on port', PORT);
+        })
+    )
+    .catch((e) => {
+        console.error(e)
+        throw new e;
+    })
 
