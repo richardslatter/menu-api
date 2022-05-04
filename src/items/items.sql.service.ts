@@ -8,14 +8,24 @@ import {BaseItem, Item} from "./item.interface";
 
 export const findAllQuery = async (): Promise<Item[]> => {
     const conn = await connection;
-    const res = await conn.query('SELECT * FROM items')
-    return res[0] as Item[];
+    try {
+        const res = await conn.query('SELECT * FROM items')
+        return res[0] as Item[];
+    } catch (e) {
+        console.error(e);
+        throw e;
+    }
 }
 
 export const findQuery = async (id: number): Promise<Item> => {
     const conn = await connection;
-    const res = await conn.query('SELECT * from items WHERE id =?', [id])
-    return res[0] as unknown as Item;
+    try{
+        const res = await conn.query('SELECT * from items WHERE id =?', [id])
+        return res[0] as unknown as Item;
+    }catch (e) {
+        console.error(e);
+        throw e;
+    }
 }
 
 export const createEntry = async (id: number, newItem: BaseItem): Promise<Item> => {
@@ -39,15 +49,19 @@ export const createEntry = async (id: number, newItem: BaseItem): Promise<Item> 
 }
 
 export const updateEntry = async(id: number, newItem: BaseItem): Promise<Item> => {
-
     const conn = await connection;
 
     const {name,price,description,image} = newItem;
 
-    const res = await conn.query('UPDATE items SET id=?, name=?, price=?, description=?, image=? WHERE id=?',
-        [id, name, price, description, image, id]);
+    try{
+        const res = await conn.query('UPDATE items SET id=?, name=?, price=?, description=?, image=? WHERE id=?',
+            [id, name, price, description, image, id]);
+        return res[0] as unknown as Item;
+    } catch(e) {
+        console.error(e);
+        throw(e);
+    }
 
-    return res[0] as unknown as Item;
 }
 
 

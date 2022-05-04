@@ -50,7 +50,6 @@ export const connection = mysql.createConnection({
 });
 
 
-
 /**
  * Server Activation
  */
@@ -58,8 +57,7 @@ export const connection = mysql.createConnection({
 connection
     .then(() =>
         app.listen(PORT, () => {
-            const tempString = "test"
-            console.log('Listening on port', PORT);
+            //console.log('Listening on port', PORT);
         })
     )
     .catch((e) => {

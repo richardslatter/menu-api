@@ -7,14 +7,26 @@ const index_1 = require("../index");
  */
 const findAllQuery = async () => {
     const conn = await index_1.connection;
-    const res = await conn.query('SELECT * FROM items');
-    return res[0];
+    try {
+        const res = await conn.query('SELECT * FROM items');
+        return res[0];
+    }
+    catch (e) {
+        console.error(e);
+        throw e;
+    }
 };
 exports.findAllQuery = findAllQuery;
 const findQuery = async (id) => {
     const conn = await index_1.connection;
-    const res = await conn.query('SELECT * from items WHERE id =?', [id]);
-    return res[0];
+    try {
+        const res = await conn.query('SELECT * from items WHERE id =?', [id]);
+        return res[0];
+    }
+    catch (e) {
+        console.error(e);
+        throw e;
+    }
 };
 exports.findQuery = findQuery;
 const createEntry = async (id, newItem) => {
@@ -37,8 +49,14 @@ exports.createEntry = createEntry;
 const updateEntry = async (id, newItem) => {
     const conn = await index_1.connection;
     const { name, price, description, image } = newItem;
-    const res = await conn.query('UPDATE items SET id=?, name=?, price=?, description=?, image=? WHERE id=?', [id, name, price, description, image, id]);
-    return res[0];
+    try {
+        const res = await conn.query('UPDATE items SET id=?, name=?, price=?, description=?, image=? WHERE id=?', [id, name, price, description, image, id]);
+        return res[0];
+    }
+    catch (e) {
+        console.error(e);
+        throw (e);
+    }
 };
 exports.updateEntry = updateEntry;
 const deleteEntry = async (id) => {
