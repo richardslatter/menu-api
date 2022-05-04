@@ -1,81 +1,56 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.newfind = exports.newfindAll = void 0;
+exports.deleteEntry = exports.updateEntry = exports.createEntry = exports.findQuery = exports.findAllQuery = void 0;
 const index_1 = require("../index");
 /**
- * In-Memory Store
+ * SQL Query Functions
  */
-let backup_items = {
-    1: {
-        id: 1,
-        name: "Backup Burger",
-        price: 599,
-        description: "Tasty",
-        image: "https://cdn.auth0.com/blog/whatabyte/burger-sm.png",
-    },
-    2: {
-        id: 2,
-        name: "Backup Pizza",
-        price: 299,
-        description: "Cheesy",
-        image: "https://cdn.auth0.com/blog/whatabyte/pizza-sm.png",
-    },
-    3: {
-        id: 3,
-        name: "Backup Tea",
-        price: 199,
-        description: "Informative",
-        image: "https://cdn.auth0.com/blog/whatabyte/tea-sm.png",
-    }
-};
-/*
-
-export const NEWfindAll = async (): Promise<Item[] | null> => {
-    const results = await connection.query('SELECT * FROM items');
-    console.log(results);
-
-    return null;
-
-    /*
-    return await new Promise((success, failure) => {
-        connection.query('SELECT * FROM items', function (e: any, results: Item[]) {
-            if (e) {
-                failure(e);
-            } else {
-                const data: Item[] = results;
-                success(data);
-            }
-        })
-    })
-}
-
-
-export const NewFind = async (id: number): any => {
-    console.log('test');
-
-    /*
-    return await new Promise((success, failure) => {
-        connection.query('SELECT * FROM items where id = ?', [id], function (e: any, result) {
-            if (e) {
-                failure(e);
-            } else {
-                const data = result;
-                success(data);
-            }
-        })
-    })
-}
-*/
-const newfindAll = async () => {
+const findAllQuery = async () => {
     const conn = await index_1.connection;
     const res = await conn.query('SELECT * FROM items');
     return res[0];
 };
-exports.newfindAll = newfindAll;
-const newfind = async (id) => {
+exports.findAllQuery = findAllQuery;
+const findQuery = async (id) => {
     const conn = await index_1.connection;
     const res = await conn.query('SELECT * from items WHERE id =?', [id]);
     return res[0];
 };
-exports.newfind = newfind;
+exports.findQuery = findQuery;
+const createEntry = async (id, newItem) => {
+    const newITEM = {
+        id,
+        ...newItem
+    };
+    const conn = await index_1.connection;
+    const { name, price, description, image } = newItem;
+    try {
+        const res = await conn.query('INSERT INTO items ( name, price, description, image) VALUES (?,?,?,?)', [name, price, description, image]);
+        return res[0];
+    }
+    catch (e) {
+        console.error(e);
+        throw e;
+    }
+};
+exports.createEntry = createEntry;
+const updateEntry = async (id, newItem) => {
+    const conn = await index_1.connection;
+    const { name, price, description, image } = newItem;
+    const res = await conn.query('UPDATE items SET id=?, name=?, price=?, description=?, image=? WHERE id=?', [id, name, price, description, image, id]);
+    return res[0];
+};
+exports.updateEntry = updateEntry;
+const deleteEntry = async (id) => {
+    const conn = await index_1.connection;
+    try {
+        const res = await conn.query('DELETE FROM items WHERE id=?', [id]);
+        return null;
+    }
+    catch (e) {
+        console.error(e);
+        throw (e);
+    }
+};
+exports.deleteEntry = deleteEntry;
 //# sourceMappingURL=items.sql.service.js.map

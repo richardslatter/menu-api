@@ -9,7 +9,6 @@ import helmet from 'helmet';
 import {itemsRouter} from "./items/items.router";
 import {errorHandler} from "./middleware/error.middleware";
 import {notFoundHandler} from "./middleware/not-found.middleware";
-import {newfind, newfindAll, test} from "./items/items.sql.service";
 import mysql from 'mysql2/promise';
 
 dotenv.config();
@@ -49,19 +48,7 @@ export const connection = mysql.createConnection({
     password: 'password', // I know its bad
     database: 'menu'
 });
-//const newItem = NewFind(1);
 
-
-const query1 = newfindAll();
-const query = newfind();
-
-console.log(query);
-
-//newItem.then(data => console.log(data));
-//newItems.then(data => console.log(data));
-console.log('test');
-//console.log(newItems);
-//console.log(newItem);
 
 
 /**

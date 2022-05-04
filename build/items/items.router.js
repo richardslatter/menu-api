@@ -64,7 +64,7 @@ exports.itemsRouter.get("/:id", async (req, res) => {
     }
 });
 // POST items
-exports.itemsRouter.put("/", async (req, res) => {
+exports.itemsRouter.post("/", async (req, res) => {
     try {
         const item = req.body;
         const newItem = await ItemService.create(item);

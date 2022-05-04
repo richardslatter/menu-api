@@ -37,7 +37,6 @@ const helmet_1 = __importDefault(require("helmet"));
 const items_router_1 = require("./items/items.router");
 const error_middleware_1 = require("./middleware/error.middleware");
 const not_found_middleware_1 = require("./middleware/not-found.middleware");
-const items_sql_service_1 = require("./items/items.sql.service");
 const promise_1 = __importDefault(require("mysql2/promise"));
 dotenv.config();
 /**
@@ -66,15 +65,6 @@ exports.connection = promise_1.default.createConnection({
     password: 'password',
     database: 'menu'
 });
-//const newItem = NewFind(1);
-const query1 = (0, items_sql_service_1.newfindAll)();
-const query = (0, items_sql_service_1.newfind)();
-console.log(query);
-//newItem.then(data => console.log(data));
-//newItems.then(data => console.log(data));
-console.log('test');
-//console.log(newItems);
-//console.log(newItem);
 /**
  * Server Activation
  */

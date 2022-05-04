@@ -3,82 +3,41 @@
  */
 
 import {BaseItem, Item} from "./item.interface"
-import {Items} from "./items.interface"
-import {newfind, newfindAll} from "./items.sql.service";
-
-
-/**
- * In-Memory Store
- */
-
-let items: Items ={
-    1:{
-        id: 1,
-        name: "Burger",
-        price: 599,
-        description: "Tasty",
-        image: "https://cdn.auth0.com/blog/whatabyte/burger-sm.png",
-    },
-    2:{
-        id: 2,
-        name: "Pizza",
-        price: 299,
-        description: "Cheesy",
-        image: "https://cdn.auth0.com/blog/whatabyte/pizza-sm.png",
-    },
-    3:{
-        id: 3,
-        name: "Tea",
-        price: 199,
-        description: "Informative",
-        image: "https://cdn.auth0.com/blog/whatabyte/tea-sm.png",
-    }
-};
+import {findQuery, findAllQuery, createEntry, deleteEntry, updateEntry} from "./items.sql.service";
 
 
 /**
  * Service Methods
  */
 
-//export const findAll = async (): Promise<Item[]> => Object.values(items);
-export const findAll = async (): Promise<Item[]> => newfindAll();
+export const findAll = async (): Promise<Item[]> => findAllQuery();
 
-export const find = async (id: number): Promise<Item> => newfind(id);
-//export const find = async (id: number): Promise<Item> => NewFind(id);
+export const find = async (id: number): Promise<Item> => findQuery(id);
 
 export const create = async (newItem: BaseItem): Promise<Item> => {
     const id = new Date().valueOf();
+    const newITEM = createEntry(id, newItem);
 
-    items[id] = {
-        id,
-        ...newItem
-    };
-
-    return items[id]
+    return newITEM
 }
 
-export const update = async (
-    id: number,
-    itemUpdate: BaseItem
-): Promise<Item | null> => {
-    const item = await find(id);
+export const update = async (id: number, itemUpdate: BaseItem): Promise<Item | null> => {
+    const item = await findQuery(id);
 
     if(!item) {
         return null;
     }
 
-    items[id] = {id, ...itemUpdate};
+    const newITEM = await updateEntry(id, itemUpdate);
 
-    return items[id];
+    return newITEM
 }
 
 export const remove = async (id: number): Promise<null | void> => {
-    const item = await find(id);
+    const item = await findQuery    (id);
     if(!item) {
         return null;
     }
 
-    delete items[id];
+    await deleteEntry(id);
 }
-
-

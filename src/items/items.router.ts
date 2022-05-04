@@ -51,7 +51,7 @@ itemsRouter.get("/:id", async (req: Request, res: Response) => {
 
 // POST items
 
-itemsRouter.put("/", async (req: Request, res: Response) => {
+itemsRouter.post("/", async (req: Request, res: Response) => {
     try{
         const item: BaseItem = req.body;
 
