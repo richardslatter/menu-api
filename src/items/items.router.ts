@@ -2,7 +2,7 @@
  * Required External Modules and Interfaces
  */
 
-import express, {Request, Response} from "express";
+import express, {Request, response, Response} from "express";
 import * as ItemService from "./items.service"
 import {BaseItem, Item} from "./item.interface"
 
@@ -26,6 +26,7 @@ itemsRouter.get("/", async (req: Request, res: Response) => {
 
         res.status(200).send(items);
     } catch ({message}) {
+
         res.status(500).send(message);
     }
 })
@@ -55,11 +56,15 @@ itemsRouter.post("/", async (req: Request, res: Response) => {
     try{
         const item: BaseItem = req.body;
 
-        const newItem = await ItemService.create(item);
+        const newItem: Item = await ItemService.create(item);
 
-        res.status(201).json(newItem);
-    } catch({message}) {
-        res.status(500).send(message);
+        if(newItem.id >= 0){
+            res.status(201).json(newItem);
+        } else {
+            throw new TypeError("Cannot create item, id invalid or does not exist")
+        }
+    } catch(error) {
+        res.status(500).json("Cannot create item, id invalid or does not exist");
     }
 })
 

@@ -1,4 +1,4 @@
-import {connection} from '../index';
+import {getConnection} from '../database';
 import {Items} from './items.interface';
 import {BaseItem, Item} from "./item.interface";
 
@@ -7,7 +7,7 @@ import {BaseItem, Item} from "./item.interface";
  */
 
 export const findAllQuery = async (): Promise<Item[]> => {
-    const conn = await connection;
+    const conn = await getConnection();
     try {
         const res = await conn.query('SELECT * FROM items')
         return res[0] as Item[];
@@ -18,7 +18,7 @@ export const findAllQuery = async (): Promise<Item[]> => {
 }
 
 export const findQuery = async (id: number): Promise<Item> => {
-    const conn = await connection;
+    const conn = await getConnection();
     try{
         const res = await conn.query('SELECT * from items WHERE id =?', [id])
         return res[0] as unknown as Item;
@@ -34,7 +34,7 @@ export const createEntry = async (id: number, newItem: BaseItem): Promise<Item> 
         ...newItem
     };
 
-    const conn = await connection;
+    const conn = await getConnection();
     const {name,price,description,image} = newItem;
     try {
         const res = await conn.query('INSERT INTO items ( name, price, description, image) VALUES (?,?,?,?)',
@@ -49,7 +49,7 @@ export const createEntry = async (id: number, newItem: BaseItem): Promise<Item> 
 }
 
 export const updateEntry = async(id: number, newItem: BaseItem): Promise<Item> => {
-    const conn = await connection;
+    const conn = await getConnection();
 
     const {name,price,description,image} = newItem;
 
@@ -66,7 +66,7 @@ export const updateEntry = async(id: number, newItem: BaseItem): Promise<Item> =
 
 
 export const deleteEntry = async(id:number): Promise<null> => {
-    const conn = await connection;
+    const conn = await getConnection();
 
     try{
         const res = await conn.query('DELETE FROM items WHERE id=?', [id]);
