@@ -68,33 +68,3 @@ describe("Item Router Querying API", () => {
       .expect(204);
   });
 });
-
-/*
-describe('Item Router Service API' , () => {
-
-    it('', async () => {
-
-        let req = 200;
-        let res = 200;
-
-        const response = await request.get('/', req, res)
-
-        console.log(response.response);
-
-        //expect(response.statusCode).toBe(200)
-
-    });
-
- */
-
-/*
-const stubItem = (): Item => {
-    return {
-        id: 0,
-        name: "burger",
-        price: 199,
-        description: "big",
-        image: "www.google.com"
-    }
-}
- */
