@@ -1,81 +1,73 @@
-import {Item} from "./item.interface";
-import request from 'supertest';
+import { Item } from "./item.interface";
+import request from "supertest";
 import app from "../app";
-import {findAll} from "./items.service";
 
 const stubItem = (): Item => {
-    return {
-        id: 0,
-        name: "burger",
-        price: 199,
-        description: "big",
-        image: "www.google.com"
-    }
-}
+  return {
+    id: 0,
+    name: "burger",
+    price: 199,
+    description: "big",
+    image: "www.google.com",
+  };
+};
 
-jest.mock('./items.service', () => ({
-    ...(jest.requireActual('./items.service')),
-    findAll: jest.fn(() => {
-        return stubItem();
-    }),
+jest.mock("./items.service", () => ({
+  ...jest.requireActual("./items.service"),
+  findAll: jest.fn(() => {
+    return stubItem();
+  }),
 
-    find: jest.fn(() => {
-        return null;
-    }),
+  find: jest.fn(() => {
+    return null;
+  }),
 
-    create: jest.fn(() => {
-        return 0;
-    }),
+  create: jest.fn(() => {
+    return 0;
+  }),
 
-    remove: jest.fn(() => {
-        return null;
-    })
-}))
+  remove: jest.fn(() => {
+    return null;
+  }),
+}));
 
+describe("Item Router Querying API", () => {
+  it("returns 200 ok and the Items after API request", async () => {
+    //expect(services).toHaveBeenCalledTimes(0);
 
-describe('Item Router Querying API' , () => {
+    const response = await request(app).get("/api/menu/items").expect(200);
 
-    it('returns 200 ok and the Items after API request', async () => {
+    expect(response.body).toEqual(stubItem());
+  });
 
-        //expect(services).toHaveBeenCalledTimes(0);
+  it("returns 404 if Item cannot be found", async () => {
+    const id = 1;
 
-        const response = await request(app)
-            .get('/api/menu/items')
-            .expect(200)
+    const response = await request(app)
+      .get("/api/menu/items/" + id)
+      .expect(404);
+  });
 
-        expect(response.body).toEqual(stubItem())
-    });
+  it("returns 500 internal if there is an error", async () => {
+    const server = app.listen(7123);
 
-    it('returns 404 if Item cannot be found', async () => {
-        const id = 1;
+    const response = await request(app).post("/api/menu/items/").expect(500);
 
-        const response = await request(app)
-            .get('/api/menu/items/' + id)
-            .expect(404)
-    });
+    expect(response.body).toEqual(
+      "Cannot create item, id invalid or does not exist"
+    );
 
-    it('returns 500 internal if there is an error', async () => {
-        const server = app.listen(7123);
+    server.close();
+  });
 
-        const response = await request(app)
-            .post('/api/menu/items/')
-            .expect(500)
+  it("returns 204 if item is deleted", async () => {
+    const id = 1;
 
-        expect(response.body).toEqual("Cannot create item, id invalid or does not exist")
-
-        server.close();
-    });
-
-    it('returns 204 if item is deleted', async() => {
-        const id = 1;
-
-        const response = await request(app)
-            .delete('/api/menu/items/' + id)
-            .expect(204)
-    })
-
-})
-
+    const response = await request(app)
+      .delete("/api/menu/items/" + id)
+      .expect(204);
+  });
+});
 
 /*
 describe('Item Router Service API' , () => {
@@ -94,7 +86,6 @@ describe('Item Router Service API' , () => {
     });
 
  */
-
 
 /*
 const stubItem = (): Item => {
